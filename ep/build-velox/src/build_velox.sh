@@ -208,7 +208,7 @@ function check_commit {
     fi
   else
     # Branch-new build requires all untracked files to be deleted. We only need the source code.
-    sudo git clean -dffx :/
+    git clean -dffx :/
   fi
 
   if [ -f ${VELOX_HOME}/velox-build.cache ]; then
@@ -272,6 +272,20 @@ function setup_linux {
         set -u
         ;;
     3.2) scripts/setup-centos8.sh ;;
+    *)
+      echo "Unsupported tencentos version: $LINUX_VERSION_ID"
+      exit 1
+      ;;
+    esac
+  elif [[ "$LINUX_DISTRIBUTION" == "openEuler" ]]; then
+    case "$LINUX_VERSION_ID" in
+    22.03)
+        scripts/setup-centos7.sh
+        set +u
+        export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:$PKG_CONFIG_PATH
+        source /opt/rh/devtoolset-9/enable
+        set -u
+        ;;
     *)
       echo "Unsupported tencentos version: $LINUX_VERSION_ID"
       exit 1

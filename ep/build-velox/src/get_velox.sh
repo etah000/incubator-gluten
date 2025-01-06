@@ -207,6 +207,13 @@ function process_setup_tencentos32 {
   sed -i "s/.*dnf config-manager --set-enabled powertools/#&/" scripts/setup-centos8.sh
 }
 
+function process_setup_openeuler22 {
+  process_setup_centos7
+  sed -i "s/yum_install centos-release-scl/#&/"  scripts/setup-centos8.sh
+  sed -i "s/yum_install devtoolset-9/#&/" scripts/setup-centos8.sh
+  sed -i "s/.*devtoolset-9/enable || exit 1/#&/"  scripts/setup-centos8.sh
+}
+
 echo "Preparing Velox source code..."
 echo "ENABLE_HDFS=${ENABLE_HDFS}"
 
@@ -230,10 +237,10 @@ if [ -d $VELOX_SOURCE_DIR ]; then
   if [ -z "$EXISTS" ]; then
     git fetch $VELOX_REPO $TARGET_BUILD_COMMIT:refs/tags/build_$TARGET_BUILD_COMMIT
   fi
-  git reset --hard HEAD
+  # git reset --hard HEAD
   git checkout refs/tags/build_$TARGET_BUILD_COMMIT
 else
-  git clone $VELOX_REPO -b $VELOX_BRANCH $VELOX_SOURCE_DIR
+  git clone --depth 1 $VELOX_REPO -b $VELOX_BRANCH  --single-branch $VELOX_SOURCE_DIR
   cd $VELOX_SOURCE_DIR
   git checkout $TARGET_BUILD_COMMIT
 fi
@@ -289,6 +296,14 @@ function setup_linux {
     case "$LINUX_VERSION_ID" in
       2.4) process_setup_centos7 ;;
       3.2) process_setup_tencentos32 ;;
+      *)
+        echo "Unsupport tencentos version: $LINUX_VERSION_ID"
+        exit 1
+      ;;
+    esac
+  elif [[ "$LINUX_DISTRIBUTION" == "openEuler" ]]; then
+    case "$LINUX_VERSION_ID" in
+      22.03) process_setup_openeuler22 ;;
       *)
         echo "Unsupport tencentos version: $LINUX_VERSION_ID"
         exit 1

@@ -281,13 +281,10 @@ function setup_linux {
     case "$LINUX_VERSION_ID" in
     22.03)
         scripts/setup-centos7.sh
-        set +u
         export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:$PKG_CONFIG_PATH
-        source /opt/rh/devtoolset-9/enable
-        set -u
         ;;
     *)
-      echo "Unsupported tencentos version: $LINUX_VERSION_ID"
+      echo "Unsupported openEuler version: $LINUX_VERSION_ID"
       exit 1
       ;;
     esac

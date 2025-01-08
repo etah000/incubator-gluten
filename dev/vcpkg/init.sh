@@ -1,13 +1,16 @@
 #! /bin/bash
-
-set -e
+set -exu
 
 exec 3>&1 >&2
 
 SCRIPT_ROOT="$(realpath "$(dirname "$0")")"
 VCPKG_ROOT="$SCRIPT_ROOT/.vcpkg"
 VCPKG="$SCRIPT_ROOT/.vcpkg/vcpkg"
-VCPKG_TRIPLET=x64-linux-avx
+if [ "$CPU_TARGET" = "aarch64"  ]; then 
+  VCPKG_TRIPLET=arm64-linux-release
+else 
+  VCPKG_TRIPLET=x64-linux-avx
+fi
 
 cd "$SCRIPT_ROOT"
 

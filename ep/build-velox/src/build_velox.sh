@@ -110,8 +110,7 @@ function compile {
   fi
 
   # Maybe there is some set option in velox setup script. Run set command again.
-  set -exu  
-
+  
   CXX_FLAGS='-Wno-missing-field-initializers'
   COMPILE_OPTION="-DCMAKE_CXX_FLAGS=\"$CXX_FLAGS\" -DVELOX_ENABLE_PARQUET=ON -DVELOX_BUILD_TESTING=OFF"
   if [ $BUILD_TEST_UTILS == "ON" ]; then

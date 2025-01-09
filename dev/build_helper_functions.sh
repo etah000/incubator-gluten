@@ -14,6 +14,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+function prompt {
+  (
+    while true; do
+      local input="${PROMPT_ALWAYS_RESPOND:-}"
+      echo -n "$(tput bold)$* [Y, n]$(tput sgr0) "
+      [[ -z "${input}" ]] && read input
+      if [[ "${input}" == "Y" || "${input}" == "y" || "${input}" == "" ]]; then
+        return 0
+      elif [[ "${input}" == "N" || "${input}" == "n" ]]; then
+        return 1
+      fi
+    done
+  ) 2> /dev/null
+}
+
 function get_cxx_flags {
   local CPU_ARCH=$1
 
@@ -86,7 +101,9 @@ function wget_and_untar {
   local DIR=$2
   mkdir -p "${DIR}"
   pushd "${DIR}"
-  curl -L "${URL}" > $2.tar.gz
+  if [ ! -f "./$2.tar.gz" ]; then 
+    curl -L "${URL}" > $2.tar.gz
+  fi 
   tar -xz --strip-components=1 -f $2.tar.gz
   popd
 }

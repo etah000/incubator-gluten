@@ -25,7 +25,6 @@ ENABLE_HDFS=OFF
 # Enable ABFS connector.
 ENABLE_ABFS=OFF
 BUILD_TYPE=release
-VELOX_HOME=""
 ENABLE_EP_CACHE=OFF
 # May be deprecated in Gluten build.
 ENABLE_BENCHMARK=OFF

@@ -269,7 +269,6 @@ function setup_linux {
   local LINUX_VERSION_ID=$(. /etc/os-release && echo ${VERSION_ID})
 
   # apply patches
-  sed -i 's/SUDO="${SUDO:-""}"/SUDO="${SUDO:-"sudo --preserve-env"}"/g' scripts/setup-helper-functions.sh
   if [[ "$LINUX_DISTRIBUTION" == "ubuntu" || "$LINUX_DISTRIBUTION" == "debian" || "$LINUX_DISTRIBUTION" == "pop" ]]; then
     process_setup_ubuntu
   elif [[ "$LINUX_DISTRIBUTION" == "centos" ]]; then
@@ -333,6 +332,6 @@ else
   exit 1
 fi
 
-apply_compilation_fixes $CURRENT_DIR $VELOX_SOURCE_DIR
+apply_compilation_fixes $CURRENT_DIR $VELOX_HOME
 
 echo "Velox-get finished."

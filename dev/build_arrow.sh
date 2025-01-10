@@ -21,10 +21,14 @@ source ${CURRENT_DIR}/build_helper_functions.sh
 VELOX_ARROW_BUILD_VERSION=15.0.0
 ARROW_PREFIX=$ARROW_HOME/arrow_ep
 BUILD_TYPE=Release
+DEPENDENCY_DIR=${DEPENDENCY_DIR:-}
 
 function prepare_arrow_build() {
   mkdir -p ${ARROW_HOME} && pushd ${ARROW_HOME}
-  rm -rf arrow_ep
+  if [ -d "arrow_ep" ] && prompt "already exists. bypass install?"; then
+    return 
+  fi
+  rm -rf "arrow_ep"
   wget_and_untar https://archive.apache.org/dist/arrow/arrow-${VELOX_ARROW_BUILD_VERSION}/apache-arrow-${VELOX_ARROW_BUILD_VERSION}.tar.gz arrow_ep
   cd arrow_ep
   patch -p1 < $CURRENT_DIR/../ep/build-velox/src/modify_arrow.patch
@@ -41,6 +45,10 @@ function install_arrow_deps {
 }
 
 function build_arrow_cpp() {
+  if [ -d "/usr/local/lib64/libarrow.a" ] && prompt "already exists. bypass building cpp?"; then
+    return 
+  fi
+
  pushd $ARROW_PREFIX/cpp
 
  cmake_install \

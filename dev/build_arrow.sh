@@ -19,11 +19,12 @@ CURRENT_DIR=$(cd "$(dirname "$BASH_SOURCE")"; pwd)
 export SUDO=sudo
 source ${CURRENT_DIR}/build_helper_functions.sh
 VELOX_ARROW_BUILD_VERSION=15.0.0
-ARROW_PREFIX=$CURRENT_DIR/../ep/_ep/arrow_ep
+ARROW_PREFIX=$ARROW_HOME/arrow_ep
 BUILD_TYPE=Release
 
 function prepare_arrow_build() {
-  mkdir -p ${ARROW_PREFIX}/../ && pushd ${ARROW_PREFIX}/../ 
+  mkdir -p ${ARROW_HOME} && pushd ${ARROW_HOME}
+  rm -rf arrow_ep
   wget_and_untar https://archive.apache.org/dist/arrow/arrow-${VELOX_ARROW_BUILD_VERSION}/apache-arrow-${VELOX_ARROW_BUILD_VERSION}.tar.gz arrow_ep
   cd arrow_ep
   patch -p1 < $CURRENT_DIR/../ep/build-velox/src/modify_arrow.patch
@@ -32,6 +33,7 @@ function prepare_arrow_build() {
 }
 
 function install_arrow_deps {
+  cd "${DEPENDENCY_DIR}"
   wget_and_untar https://github.com/openssl/openssl/archive/refs/tags/OpenSSL_1_1_1s.tar.gz openssl
   pushd openssl
   ./config no-shared && make depend && make && sudo make install

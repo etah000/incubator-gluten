@@ -226,25 +226,21 @@ CURRENT_DIR=$(
 if [ "$VELOX_HOME" == "" ]; then
   VELOX_HOME="$CURRENT_DIR/../build/velox_ep"
 fi
-VELOX_SOURCE_DIR="${VELOX_HOME}"
+VELOX_SOURCE_DIR=$(basename ${VELOX_HOME})
+VELOX_SOURCE_BASE=$(dirname ${VELOX_HOME})
 
 # checkout code
 TARGET_BUILD_COMMIT="$(git ls-remote $VELOX_REPO $VELOX_BRANCH | awk '{print $1;}')"
+cd ${VELOX_SOURCE_BASE}
 if [ -d $VELOX_SOURCE_DIR ]; then
-  echo "Velox source folder $VELOX_SOURCE_DIR already exists, nothing to do."
-  exit 0
-  # cd $VELOX_SOURCE_DIR
-  # git init .
-  # EXISTS=$(git show-ref refs/tags/build_$TARGET_BUILD_COMMIT || true)
-  # if [ -z "$EXISTS" ]; then
-  #   git fetch $VELOX_REPO $TARGET_BUILD_COMMIT:refs/tags/build_$TARGET_BUILD_COMMIT
-  # fi
-  # git reset --hard HEAD
-  # git checkout refs/tags/build_$TARGET_BUILD_COMMIT
+  echo "Velox source folder $VELOX_SOURCE_DIR already exists."
+  cd $VELOX_SOURCE_DIR
+  git reset --hard HEAD
+  git checkout $VELOX_BRANCH
 else
   git clone --depth 1 $VELOX_REPO -b $VELOX_BRANCH  --single-branch $VELOX_SOURCE_DIR
+  git checkout  -b $VELOX_BRANCH origin/$VELOX_BRANCH
   cd $VELOX_SOURCE_DIR
-  git checkout $TARGET_BUILD_COMMIT
 fi
 #sync submodules
 git submodule sync --recursive

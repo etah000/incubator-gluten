@@ -236,7 +236,7 @@ function setup_linux {
     7)
       scripts/setup-centos7.sh
       set +u
-      export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:$PKG_CONFIG_PATH
+      export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig
       source /opt/rh/devtoolset-9/enable
       set -u
       ;;
@@ -250,7 +250,7 @@ function setup_linux {
     2)
       scripts/setup-centos7.sh
       set +u
-      export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:$PKG_CONFIG_PATH
+      export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig
       source /opt/rh/devtoolset-9/enable
       set -u
       ;;
@@ -265,7 +265,7 @@ function setup_linux {
     2.4)
         scripts/setup-centos7.sh
         set +u
-        export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:$PKG_CONFIG_PATH
+        export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig
         source /opt/rh/devtoolset-9/enable
         set -u
         ;;
@@ -279,7 +279,7 @@ function setup_linux {
     case "$LINUX_VERSION_ID" in
     22.03)
         scripts/setup-centos7.sh
-        export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:$PKG_CONFIG_PATH
+        export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig
         ;;
     *)
       echo "Unsupported openEuler version: $LINUX_VERSION_ID"

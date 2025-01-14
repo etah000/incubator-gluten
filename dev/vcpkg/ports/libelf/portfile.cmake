@@ -10,7 +10,24 @@ vcpkg_extract_source_archive(
     PATCHES install.patch
 )
 
-vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH} AUTOCONFIG)
+# 替换旧版 config.guess 和 config.sub
+file(REMOVE ${SOURCE_PATH}/config.guess ${SOURCE_PATH}/config.sub)
+file(DOWNLOAD 
+    "http://git.savannah.gnu.org/cgit/config.git/plain/config.guess"
+    ${SOURCE_PATH}/config.guess
+)
+file(DOWNLOAD 
+    "http://git.savannah.gnu.org/cgit/config.git/plain/config.sub"
+    ${SOURCE_PATH}/config.sub
+)
+file(CHMOD ${SOURCE_PATH}/config.guess FILE_PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ)
+
+vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH} 
+    AUTOCONFIG 
+    CONFIGURE_OPTIONS 
+      --build=${TARGET_TRIPLET}
+)
+
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 

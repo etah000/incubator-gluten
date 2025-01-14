@@ -6,6 +6,7 @@ vcpkg_download_distfile(ARCHIVE
 
 # for gcc >= 10
 set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -fcommon")
+set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -fcommon")
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH

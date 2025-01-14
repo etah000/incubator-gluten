@@ -4,28 +4,35 @@ set -exu
 exec 3>&1 >&2
 
 SCRIPT_ROOT="$(realpath "$(dirname "$0")")"
-VCPKG_ROOT="$SCRIPT_ROOT/.vcpkg"
-VCPKG="$SCRIPT_ROOT/.vcpkg/vcpkg"
+VCPKG_ROOT=${VCPKG_ROOT:-/tmp/vcpkg_root}
+VCPKG="$VCPKG_ROOT/vcpkg"
+VCPKG_VERSION="2024.12.16"
+
 if [ "$CPU_TARGET" = "aarch64"  ]; then 
   VCPKG_TRIPLET=arm64-linux-release
 else 
   VCPKG_TRIPLET=x64-linux-avx
 fi
 
-cd "$SCRIPT_ROOT"
+cd "$VCPKG_ROOT"
 
 if [ ! -d "$VCPKG_ROOT" ] || [ -z "$(ls "$VCPKG_ROOT")" ]; then
-    git clone https://github.com/microsoft/vcpkg.git --branch 2023.10.19 "$VCPKG_ROOT"
+    git clone --depth 1 https://github.com/microsoft/vcpkg.git --branch $VCPKG_VERSION --single-branch "$VCPKG_ROOT"
+else 
+    git fetch --depth 1  --progress origin $VCPKG_VERSION
+    git reset --hard
+    git checkout $VCPKG_VERSION
 fi
 [ -f "$VCPKG" ] || "$VCPKG_ROOT/bootstrap-vcpkg.sh" -disableMetrics
 
-sed -i "s/3.27.1/3.28.3/g" $VCPKG_ROOT/scripts/vcpkgTools.xml
-sed -i "s/192374a68e2971f04974a194645726196d9b8ee7abd650d1e6f65f7aa2ccc9b186c3edb473bb4958c764532edcdd42f4182ee1fcb86b17d78b0bcd6305ce3df1/bd311ca835ef0914952f21d70d1753564d58de2ede02e80ede96e78cd2f40b4189e006007643ebb37792e13edd97eb4a33810bc8aca1eab6dd428eaffe1d2e38/g" $VCPKG_ROOT/scripts/vcpkgTools.xml
+# sed -i "s/3.27.1/3.28.3/g" $VCPKG_ROOT/scripts/vcpkgTools.xml
+# sed -i "s/192374a68e2971f04974a194645726196d9b8ee7abd650d1e6f65f7aa2ccc9b186c3edb473bb4958c764532edcdd42f4182ee1fcb86b17d78b0bcd6305ce3df1/bd311ca835ef0914952f21d70d1753564d58de2ede02e80ede96e78cd2f40b4189e006007643ebb37792e13edd97eb4a33810bc8aca1eab6dd428eaffe1d2e38/g" $VCPKG_ROOT/scripts/vcpkgTools.xml
 
-$VCPKG install --no-print-usage \
+cd $SCRIPT_ROOT
+$VCPKG install --no-print-usage   \
     --triplet="${VCPKG_TRIPLET}" --host-triplet="${VCPKG_TRIPLET}"
 
-VCPKG_TRIPLET_INSTALL_DIR=${SCRIPT_ROOT}/vcpkg_installed/${VCPKG_TRIPLET}
+VCPKG_TRIPLET_INSTALL_DIR=${VCPKG_ROOT}/vcpkg_installed/${VCPKG_TRIPLET}
 EXPORT_TOOLS_PATH=
 EXPORT_TOOLS_PATH="${VCPKG_TRIPLET_INSTALL_DIR}/tools/protobuf:${EXPORT_TOOLS_PATH}"
 

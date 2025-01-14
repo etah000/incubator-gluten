@@ -92,6 +92,8 @@ class VeloxListenerApi extends ListenerApi {
       new SharedLibraryLoaderDebian11
     } else if (systemName.contains("Debian") && systemVersion.startsWith("12")) {
       new SharedLibraryLoaderDebian12
+    } else if (systemName.contains("openEuler") && systemVersion.startsWith("22.03")) {
+      new SharedLibraryLoaderOpenEuler22
     } else {
       throw new GlutenException(
         s"Found unsupported OS($systemName, $systemVersion)! Currently, Gluten's Velox backend" +

@@ -6,12 +6,18 @@ vcpkg_from_github(
     SHA512 a1a587fdca60a39f77d36b281ad15fefd7cb4b353c982274ef3d7702e84c834525cd5a3ec2bbc4154fce58f1c7054a17789f08485eaacfbb672544398a277951
 )
 
+set(ENABLE_SSE OFF)
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "x64")
+    set(ENABLE_SSE ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DCMAKE_PROGRAM_PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/yasm
         -DWITH_KERBEROS=on
+        -DENABLE_SSE=${ENABLE_SSE}
 )
 
 vcpkg_install_cmake()

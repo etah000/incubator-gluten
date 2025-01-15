@@ -32,7 +32,7 @@ cd $SCRIPT_ROOT
 $VCPKG install --no-print-usage   \
     --triplet="${VCPKG_TRIPLET}" --host-triplet="${VCPKG_TRIPLET}"
 
-VCPKG_TRIPLET_INSTALL_DIR=${VCPKG_ROOT}/vcpkg_installed/${VCPKG_TRIPLET}
+VCPKG_TRIPLET_INSTALL_DIR=${SCRIPT_ROOT}/vcpkg_installed/${VCPKG_TRIPLET}
 EXPORT_TOOLS_PATH=
 EXPORT_TOOLS_PATH="${VCPKG_TRIPLET_INSTALL_DIR}/tools/protobuf:${EXPORT_TOOLS_PATH}"
 
